@@ -1,0 +1,63 @@
+server:
+  port: 8081
+
+logging:
+  level:
+#    root: DEBUG
+#    tech.jhipster: ERROR
+    org.hibernate: INFO
+#    org.springframework.boot: ERROR
+#    com.kakaoi.mpc: DEBUG
+#    com.kakaoi.mpc.web.rest.HealthController: ERROR
+#    okhttp3.internal.http2: ERROR
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    open-in-view: false
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate.show_sql: true
+      hibernate.format_sql: true
+      hibernate.use_sql_comments: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+  thymeleaf:
+    cache: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 443440250446-c4388vu7q2oahf1akjt5vf5570vfr9ov.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
+#          facebook:
+#            client-id: 465358593799840
+#            client-secret: a37286e3dae00dcdce628f40dfe363f5
+#            scope: profile, email
+  datasource:
+    url: jdbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&createDatabaseIfNotExist=true
+    username: root
+    password: 1234
+  #    type: com.zaxxer.hikari.HikariDataSource
+  #    hikari:
+  #      poolName: Hikari
+  #      auto-commit: false
+  #      data-source-properties:
+  #        cachePrepStmts: true
+  #        prepStmtCacheSize: 250
+  #        prepStmtCacheSqlLimit: 2048
+  #        useServerPrepStmts: true
+#    initialization-mode: always
+
+#custom:
+#  oauth2:
+#    kakao:
+#      client-id: 1b8ff676ae01724ed77437f98d399543
