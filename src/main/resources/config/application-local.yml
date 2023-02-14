@@ -4,6 +4,16 @@
 # This configuration overrides the application.yml file.
 # ============================================================
 
+application:
+  endpoint: https://freestrokes.tistory.com/
+  user:
+    name: freestrokes
+    age: 30
+    gender: male
+  property:
+    test:
+      list: a,b,c
+
 server:
   port: 8081
 
