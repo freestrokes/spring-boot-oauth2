@@ -1,3 +1,9 @@
+# ============================================================
+# Spring Boot configuration for the "local" profile.
+#
+# This configuration overrides the application.yml file.
+# ============================================================
+
 server:
   port: 8081
 
@@ -20,9 +26,11 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
-      hibernate.show_sql: true
-      hibernate.format_sql: true
-      hibernate.use_sql_comments: true
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        default_batch_fetch_size: 100
     hibernate:
       ddl-auto: none
       naming:
@@ -55,7 +63,7 @@ spring:
   #        prepStmtCacheSize: 250
   #        prepStmtCacheSqlLimit: 2048
   #        useServerPrepStmts: true
-#    initialization-mode: always
+  #    initialization-mode: always
 
 #custom:
 #  oauth2:

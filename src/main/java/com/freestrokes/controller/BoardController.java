@@ -1,6 +1,8 @@
 package com.freestrokes.controller;
 
-import com.freestrokes.domain.Board;
+import com.freestrokes.aop.LogExecutionTime;
+import com.freestrokes.config.ApplicationProperties;
+import com.freestrokes.constants.Path;
 import com.freestrokes.dto.BoardDto;
 import com.freestrokes.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -14,28 +16,85 @@ import java.util.List;
 @RestController
 public class BoardController {
 
+    // TODO: ApplicationProperties 테스트를 위해 추가
+    private final ApplicationProperties applicationProperties;
+
     private final BoardService boardService;
 
-    @GetMapping(path = "/api/v1/boards", produces = "application/json")
-    public ResponseEntity<List<BoardDto>> getBoards() throws Exception {
-        List<BoardDto> result = boardService.getBoards();
-        return new ResponseEntity<List<BoardDto>>(result, HttpStatus.OK);
+    // TODO: DI(Dependency Injection)에 대한 설명
+    // 일반적으로 아래 코드처럼 생성자를 통해 의존성 주입을 설정해줌.
+    // 스프링 IoC Container가 해당 의존성 타입에 맞는 bean을 만들어서 주입 (의존성 관리)
+    // 의존성 주입에는 생성자, 필드 + setter 2가지 방법이 있는데
+    // 레퍼런스에서는 생성자를 이용한 방법을 권장 (생성자는 lombok의 @RequiredArgsConstructor를 사용해서 생략 가능)
+    // 필드 + setter를 사용한 경우엔 의존성 주입 없이 인스턴스 생성이 가능하다는 문제가 있음. (이 경우엔 @Autowired 어노테이션을 사용해야 함)
+    // 생성자를 사용한 경우엔 순환 참조가 발생할 수 있음.
+
+    // TODO: 생성자를 이용한 의존성 주입(DI) 예시.
+//    public BoardController(ApplicationProperties applicationProperties, BoardService boardService) {
+//        this.applicationProperties = applicationProperties;
+//        this.boardService = boardService;
+//    }
+
+    /**
+     * 게시글 목록 조회
+     *
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(path = Path.BOARDS, produces = "application/json")
+    @LogExecutionTime
+    public ResponseEntity<List<BoardDto.ResponseDto>> getBoards() throws Exception {
+
+        // TODO: ApplicationProperties 테스트를 위해 추가
+        System.out.println("applicationProperties: " + applicationProperties);
+
+        List<BoardDto.ResponseDto> result = boardService.getBoards();
+        return new ResponseEntity<List<BoardDto.ResponseDto>>(result, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/api/v1/boards", produces = "application/json")
-    public ResponseEntity<Board> postBoard(@RequestBody BoardDto boardDto) throws Exception {
-        Board result = boardService.postBoard(boardDto);
-        return new ResponseEntity<Board>(result, HttpStatus.OK);
+    /**
+     * 게시글 등록
+     *
+     * @param boardRequestDto
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(path = Path.BOARDS, produces = "application/json")
+    public ResponseEntity<BoardDto.ResponseDto> postBoard(
+        @RequestBody BoardDto.RequestDto boardRequestDto
+    ) throws Exception {
+        BoardDto.ResponseDto result = boardService.postBoard(boardRequestDto);
+        return new ResponseEntity<BoardDto.ResponseDto>(result, HttpStatus.OK);
     }
 
-    @PutMapping(path = "/api/v1/boards/{id}", produces = "application/json")
-    public ResponseEntity<Board> putBoard(@PathVariable Long id, @RequestBody BoardDto boardDto) throws Exception {
-        Board result = boardService.putBoard(id, boardDto);
-        return new ResponseEntity<Board>(result, HttpStatus.OK);
+    /**
+     * 게시글 수정
+     *
+     * @param id
+     * @param boardRequestDto
+     * @return
+     * @throws Exception
+     */
+    @PutMapping(path = Path.BOARD, produces = "application/json")
+    public ResponseEntity<BoardDto.ResponseDto> putBoard(
+        @PathVariable String id,
+        @RequestBody BoardDto.RequestDto boardRequestDto
+    ) throws Exception {
+        BoardDto.ResponseDto result = boardService.putBoard(id, boardRequestDto);
+        return new ResponseEntity<BoardDto.ResponseDto>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/api/v1/boards/{id}", produces = "application/json")
-    public ResponseEntity<?> deleteBoard(@PathVariable Long id) throws Exception {
+    /**
+     * 게시글 삭제
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @DeleteMapping(path = Path.BOARD, produces = "application/json")
+    public ResponseEntity<?> deleteBoard(
+        @PathVariable String id
+    ) throws Exception {
         boardService.deleteBoard(id);
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }
