@@ -1,6 +1,6 @@
 package com.freestrokes.controller;
 
-import com.freestrokes.constants.Path;
+import com.freestrokes.constants.PathConstants;
 import com.freestrokes.dto.BoardCommentDto;
 import com.freestrokes.service.BoardCommentService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class BoardCommentController {
      * @return
      * @throws Exception
      */
-    @PostMapping(path = Path.BOARD_COMMENTS, produces = "application/json")
+    @PostMapping(path = PathConstants.BOARD_COMMENTS, produces = "application/json")
     public ResponseEntity<BoardCommentDto.ResponseDto> postBoardComment(
         @RequestBody BoardCommentDto.RequestDto boardCommentRequestDto
     ) throws Exception {
@@ -37,7 +37,7 @@ public class BoardCommentController {
      * @return
      * @throws Exception
      */
-    @PutMapping(path = Path.BOARD_COMMENT, produces = "application/json")
+    @PutMapping(path = PathConstants.BOARD_COMMENT, produces = "application/json")
     public ResponseEntity<BoardCommentDto.ResponseDto> putBoardComment(
         @PathVariable String id,
         @RequestBody BoardCommentDto.RequestDto boardCommentRequestDto
@@ -53,7 +53,7 @@ public class BoardCommentController {
      * @return
      * @throws Exception
      */
-    @DeleteMapping(path = Path.BOARD_COMMENT, produces = "application/json")
+    @DeleteMapping(path = PathConstants.BOARD_COMMENT, produces = "application/json")
     public ResponseEntity<?> deleteBoardComment(
         @PathVariable String id
     ) throws Exception {

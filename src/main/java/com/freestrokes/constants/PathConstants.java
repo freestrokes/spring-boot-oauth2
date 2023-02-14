@@ -1,6 +1,6 @@
 package com.freestrokes.constants;
 
-public class Path {
+public class PathConstants {
 
 	/*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	| Prefix

@@ -2,7 +2,7 @@ package com.freestrokes.controller;
 
 import com.freestrokes.aop.LogExecutionTime;
 import com.freestrokes.config.ApplicationProperties;
-import com.freestrokes.constants.Path;
+import com.freestrokes.constants.PathConstants;
 import com.freestrokes.dto.BoardDto;
 import com.freestrokes.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class BoardController {
      * @return
      * @throws Exception
      */
-    @GetMapping(path = Path.BOARDS, produces = "application/json")
+    @GetMapping(path = PathConstants.BOARDS, produces = "application/json")
     @LogExecutionTime
     public ResponseEntity<List<BoardDto.ResponseDto>> getBoards() throws Exception {
 
@@ -59,7 +59,7 @@ public class BoardController {
      * @return
      * @throws Exception
      */
-    @PostMapping(path = Path.BOARDS, produces = "application/json")
+    @PostMapping(path = PathConstants.BOARDS, produces = "application/json")
     public ResponseEntity<BoardDto.ResponseDto> postBoard(
         @RequestBody BoardDto.RequestDto boardRequestDto
     ) throws Exception {
@@ -75,7 +75,7 @@ public class BoardController {
      * @return
      * @throws Exception
      */
-    @PutMapping(path = Path.BOARD, produces = "application/json")
+    @PutMapping(path = PathConstants.BOARD, produces = "application/json")
     public ResponseEntity<BoardDto.ResponseDto> putBoard(
         @PathVariable String id,
         @RequestBody BoardDto.RequestDto boardRequestDto
@@ -91,7 +91,7 @@ public class BoardController {
      * @return
      * @throws Exception
      */
-    @DeleteMapping(path = Path.BOARD, produces = "application/json")
+    @DeleteMapping(path = PathConstants.BOARD, produces = "application/json")
     public ResponseEntity<?> deleteBoard(
         @PathVariable String id
     ) throws Exception {
