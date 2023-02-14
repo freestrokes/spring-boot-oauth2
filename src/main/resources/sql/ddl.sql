@@ -1,6 +1,16 @@
 
+DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS board;
 DROP TABLE IF EXISTS board_comment;
+
+CREATE TABLE user (
+    user_id varchar(100) NOT NULL COMMENT '사용자 id',
+    name varchar(100) DEFAULT NULL COMMENT '이름',
+    email varchar(100) DEFAULT NULL COMMENT '이메일',
+    picture text DEFAULT NULL COMMENT '사진',
+    role varchar(50) DEFAULT NULL COMMENT '권한',
+    PRIMARY KEY (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자';
 
 CREATE TABLE board (
     board_id varchar(100) NOT NULL COMMENT '게시글 id',
