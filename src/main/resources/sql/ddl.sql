@@ -8,6 +8,7 @@ CREATE TABLE user (
     name varchar(100) DEFAULT NULL COMMENT '이름',
     email varchar(100) DEFAULT NULL COMMENT '이메일',
     picture text DEFAULT NULL COMMENT '사진',
+    password varchar(255) DEFAULT NULL COMMENT '비밀번호',
     role varchar(50) DEFAULT NULL COMMENT '권한',
     PRIMARY KEY (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자';
