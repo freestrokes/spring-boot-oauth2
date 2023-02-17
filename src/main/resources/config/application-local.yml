@@ -49,6 +49,11 @@ spring:
   thymeleaf:
     cache: false
   security:
+    jwt:
+      token:
+        secret-key: local-freestrokes-jwt-token-secret-key
+        access-token-valid-time: 3600000 # 1H
+        refresh-token-valid-time: 7200000 # 2H
     oauth2:
       client:
         registration:
