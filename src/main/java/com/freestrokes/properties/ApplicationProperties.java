@@ -1,4 +1,4 @@
-package com.freestrokes.config;
+package com.freestrokes.properties;
 
 import lombok.Data;
 import lombok.Getter;
