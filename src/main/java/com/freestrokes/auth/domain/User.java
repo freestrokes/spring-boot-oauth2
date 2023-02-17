@@ -1,4 +1,4 @@
-package com.freestrokes.domain;
+package com.freestrokes.auth.domain;
 
 import com.freestrokes.constants.AuthConstants;
 import lombok.Builder;
@@ -28,11 +28,14 @@ public class User {
     @Column(name = "picture", columnDefinition = "TEXT")
     private String picture;
 
+    @Column(name = "password", length = 255, nullable = false)
+    private String password;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private AuthConstants.Role role;
 
-    public void updateUser(
+    public User updateUser(
         String name,
         String email,
         String picture,
@@ -42,6 +45,8 @@ public class User {
         this.email = email;
         this.picture = picture;
         this.role = role;
+
+        return this;
     }
 
     @Builder(toBuilder = true)
@@ -50,12 +55,14 @@ public class User {
         String name,
         String email,
         String picture,
+        String password,
         AuthConstants.Role role
     ) {
         this.userId = userId;
         this.name = name;
         this.email = email;
         this.picture = picture;
+        this.password = password;
         this.role = role;
     }
 

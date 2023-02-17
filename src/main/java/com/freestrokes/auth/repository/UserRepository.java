@@ -1,6 +1,6 @@
-package com.freestrokes.repository;
+package com.freestrokes.auth.repository;
 
-import com.freestrokes.domain.User;
+import com.freestrokes.auth.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
