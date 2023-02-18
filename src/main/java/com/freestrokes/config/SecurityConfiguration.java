@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -32,11 +33,6 @@ public class SecurityConfiguration {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     private final CustomOAuth2UserService customOAuth2UserService;
-
-    @Bean
-    public BCryptPasswordEncoder encoderPassword() {
-        return new BCryptPasswordEncoder();
-    }
 
     // TODO
 //    @Bean
@@ -86,6 +82,11 @@ public class SecurityConfiguration {
             .and()
                 .build();
 
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 
 }
