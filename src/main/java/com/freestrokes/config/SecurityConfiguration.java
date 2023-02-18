@@ -45,7 +45,7 @@ public class SecurityConfiguration {
 //    }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
             .httpBasic().disable()  // spring security 로그인 페이지 사용 여부 (사용 안함)
             .csrf().disable()   // csrf 사용 여부 (사용안함)
