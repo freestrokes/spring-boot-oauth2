@@ -12,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @RequiredArgsConstructor
 @Service
 public class AuthService {
@@ -29,7 +32,11 @@ public class AuthService {
      * @throws Exception
      */
     @Transactional
-    public ResponseEntity<?> login(AuthDto.RequestDto loginRequestDto) throws Exception {
+    public ResponseEntity<?> login(
+        AuthDto.RequestDto loginRequestDto,
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse httpServletResponse
+    ) throws Exception {
 
         // 사용자 조회
         User findUser = userRepository.findByEmail(loginRequestDto.getEmail())
@@ -46,7 +53,7 @@ public class AuthService {
         }
 
         // JWT 토큰 생성
-        AuthDto.AuthTokenDto authToken = jwtTokenProvider.createJwtToken(findUser);
+        AuthDto.AuthTokenDto authToken = jwtTokenProvider.createJwtToken(findUser, httpServletRequest, httpServletResponse);
 
         return new ResponseEntity<>(authToken, HttpStatus.OK);
     }

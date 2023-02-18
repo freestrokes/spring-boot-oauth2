@@ -16,7 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Date;
 
@@ -35,16 +37,19 @@ public class JwtTokenProvider {
      * @param user
      * @return
      */
-    public AuthDto.AuthTokenDto createJwtToken(User user) {
+    public AuthDto.AuthTokenDto createJwtToken(
+        User user,
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse httpServletResponse
+    ) {
 
         Date now = new Date();
 
-        // Access Token 만료 시간 설정
+        // Access Token 만료 시간
         Date accessTokenExpiration = new Date(now.getTime() + securityProperties.getToken().getAccessTokenExpiration());
 
-        // TODO: Refresh Token
         // Refresh Token 만료 시간
-//        Date refreshTokenExpiration = new Date(now + securityProperties.getToken().getRefreshTokenExpiration());
+        Date refreshTokenExpiration = new Date(now.getTime() + securityProperties.getToken().getRefreshTokenExpiration());
 
         // claims
         Claims claims = Jwts.claims().setSubject(user.getEmail());
@@ -55,6 +60,7 @@ public class JwtTokenProvider {
         // secret key
         Key secretKey = Keys.hmacShaKeyFor(securityProperties.getToken().getSecretKey().getBytes());
 
+        // Access Token 생성
         String accessToken = Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
@@ -64,12 +70,28 @@ public class JwtTokenProvider {
 //            .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(securityProperties.getToken().getSecretKey().getBytes()))
             .compact();
 
+        // Refresh Token 생성
+        String refreshToken = Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(now)
+            .setExpiration(refreshTokenExpiration)
+            .signWith(secretKey, SignatureAlgorithm.HS256)
+            .compact();
+
+        // Refresh Token 쿠키에 추가
+        Cookie cookie = new Cookie(AuthConstants.REFRESH_TOKEN, refreshToken);
+            cookie.setPath("/");
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(securityProperties.getToken().getRefreshTokenExpiration());
+
+        httpServletResponse.addCookie(cookie);
+
         return AuthDto.AuthTokenDto.builder()
             .accessToken(accessToken)
             .accessTokenExpiration(accessTokenExpiration)
-            // TODO: Refresh Token
-//            .refreshToken(refreshToken)
-//            .refreshTokenExpiration(refreshTokenExpiration)
+            .refreshToken(refreshToken)
+            .refreshTokenExpiration(refreshTokenExpiration)
             .build();
 
     }

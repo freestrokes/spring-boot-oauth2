@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @RequiredArgsConstructor
 @RestController
 public class AuthController {
@@ -25,9 +28,11 @@ public class AuthController {
     @PostMapping(path = PathConstants.LOGIN, produces = "application/json")
     @LogExecutionTime
     public ResponseEntity<?> login(
-        @RequestBody AuthDto.RequestDto loginRequestDto
+        @RequestBody AuthDto.RequestDto loginRequestDto,
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse httpServletResponse
     ) throws Exception {
-        return authService.login(loginRequestDto);
+        return authService.login(loginRequestDto, httpServletRequest, httpServletResponse);
 //        return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 
