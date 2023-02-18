@@ -1,3 +1,8 @@
+-- user
+INSERT INTO
+    testdb.`user`(user_id, name, email, picture, password, `role`)
+VALUES
+    ('12345678-0544-45ae-a2b9-7199126c21b5', 'freesetrokes', 'freesetrokes@freesetrokes.com', null, '$2a$10$ka71fEV3sh2WDAzM8wO0Vu0t/ILGu3EHXo2u7EAOKzgB1fj9s8uKK', 'MANAGER');
 
 -- board
 INSERT INTO
