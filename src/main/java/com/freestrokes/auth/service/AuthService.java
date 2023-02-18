@@ -46,7 +46,7 @@ public class AuthService {
         }
 
         // JWT 토큰 생성
-        AuthDto.AuthTokenDto authToken = jwtTokenProvider.createJwtToken(findUser.getEmail(), findUser.getRole());
+        AuthDto.AuthTokenDto authToken = jwtTokenProvider.createJwtToken(findUser);
 
         return new ResponseEntity<>(authToken, HttpStatus.OK);
     }

@@ -1,5 +1,6 @@
 package com.freestrokes.auth.security;
 
+import com.freestrokes.auth.domain.User;
 import com.freestrokes.properties.SecurityProperties;
 import com.freestrokes.constants.AuthConstants;
 import com.freestrokes.auth.dto.AuthDto;
@@ -31,26 +32,24 @@ public class JwtTokenProvider {
     /**
      * JWT 토큰 생성
      *
-     * @param email
-     * @param role
+     * @param user
      * @return
      */
-    public AuthDto.AuthTokenDto createJwtToken(String email, AuthConstants.Role role) {
+    public AuthDto.AuthTokenDto createJwtToken(User user) {
 
         Date now = new Date();
 
         // Access Token 만료 시간
         Date accessTokenExpiration = new Date(now.getTime() + securityProperties.getToken().getAccessTokenValidTime());
 
-        // TODO
+        // TODO: Refresh Token
         // Refresh Token 만료 시간
 //        Date refreshTokenExpiration = new Date(now + securityProperties.getToken().getRefreshTokenValidTime());
 
         // claims
-        Claims claims = Jwts.claims().setSubject(AuthConstants.ACCESS_TOKEN);
-//            .setSubject(email);
-        claims.put("email", email);
-        claims.put("role", role);
+        Claims claims = Jwts.claims().setSubject(user.getEmail());
+        claims.put("email", user.getEmail());
+        claims.put("role", user.getRole());
 
         // secret key
         Key secretKey = Keys.hmacShaKeyFor(securityProperties.getToken().getSecretKey().getBytes());
@@ -60,14 +59,14 @@ public class JwtTokenProvider {
             .setIssuedAt(now)
             .setExpiration(accessTokenExpiration)
             .signWith(secretKey, SignatureAlgorithm.HS256)
-            // TODO: deprecated
+            // TODO: Deprecated
 //            .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(securityProperties.getToken().getSecretKey().getBytes()))
             .compact();
 
         return AuthDto.AuthTokenDto.builder()
             .accessToken(accessToken)
             .accessTokenExpiration(accessTokenExpiration)
-            // TODO
+            // TODO: Refresh Token
 //            .refreshToken(refreshToken)
 //            .refreshTokenExpiration(refreshTokenExpiration)
             .build();
