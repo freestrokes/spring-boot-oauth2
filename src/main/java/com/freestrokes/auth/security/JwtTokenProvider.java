@@ -39,15 +39,16 @@ public class JwtTokenProvider {
 
         Date now = new Date();
 
-        // Access Token 만료 시간
-        Date accessTokenExpiration = new Date(now.getTime() + securityProperties.getToken().getAccessTokenValidTime());
+        // Access Token 만료 시간 설정
+        Date accessTokenExpiration = new Date(now.getTime() + securityProperties.getToken().getAccessTokenExpiration());
 
         // TODO: Refresh Token
         // Refresh Token 만료 시간
-//        Date refreshTokenExpiration = new Date(now + securityProperties.getToken().getRefreshTokenValidTime());
+//        Date refreshTokenExpiration = new Date(now + securityProperties.getToken().getRefreshTokenExpiration());
 
         // claims
         Claims claims = Jwts.claims().setSubject(user.getEmail());
+        claims.put("name", user.getName());
         claims.put("email", user.getEmail());
         claims.put("role", user.getRole());
 

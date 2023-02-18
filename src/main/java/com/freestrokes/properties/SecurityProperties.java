@@ -22,8 +22,8 @@ public class SecurityProperties {
     @Setter
     public static class Token {
         private String secretKey;
-        private int accessTokenValidTime;
-        private int refreshTokenValidTime;
+        private int accessTokenExpiration;
+        private int refreshTokenExpiration;
     }
 
 }
