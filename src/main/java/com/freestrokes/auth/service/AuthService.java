@@ -5,15 +5,13 @@ import com.freestrokes.auth.domain.User;
 import com.freestrokes.auth.dto.AuthDto;
 import com.freestrokes.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,7 +45,7 @@ public class AuthService {
 
         JSONObject bodyObj = new JSONObject();
 
-        // 비밀번호 확인
+        // 비밀번호 일치 여부 확인
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), findUser.getPassword())) {
             bodyObj.put("message", "Password do not match.");
             return new ResponseEntity<>(bodyObj, HttpStatus.EXPECTATION_FAILED);

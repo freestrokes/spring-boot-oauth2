@@ -103,8 +103,10 @@ public class JwtTokenProvider {
      * @return
      */
     public Authentication getAuthentication(String token) {
+        // 토큰의 username(email)으로 사용자 조회
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(getUsername(token));
 
+        // Authentication 반환
         return new UsernamePasswordAuthenticationToken(
             userDetails,
             "",
@@ -126,6 +128,7 @@ public class JwtTokenProvider {
 //            .setSigningKey(securityProperties.getToken().getSecretKey().getBytes())
 //            .parseClaimsJws(token).getBody().getSubject()
 
+        // 토큰 subject에 설정된 username(email) 조회 후 반환
         return Jwts.parserBuilder()
             .setSigningKey(securityProperties.getToken().getSecretKey().getBytes())
             .build()
@@ -139,17 +142,12 @@ public class JwtTokenProvider {
      * @return
      */
     public String resolveToken(HttpServletRequest httpServletRequest) {
-        // request header에서 토큰 가져오기
-        String bearerToken = httpServletRequest.getHeader(AuthConstants.AUTHORIZATION_HEADER);
+        // request header에서 jwt 토큰 가져오기
+        String bearerToken = httpServletRequest.getHeader(AuthConstants.AUTH_HEADER);
 
-        if (bearerToken != null && bearerToken.startsWith(AuthConstants.BEARER_TYPE)) {
-            // TODO
-//            String[] tokenArray = bearerToken.split("Bearer");
-//            if (tokenArray.length > 0) {
-//                  return tokenArray[tokenArray.length - 1];
-//            }
-
-            return bearerToken.substring(AuthConstants.BEARER_TYPE.length()).trim();
+        if (bearerToken != null && bearerToken.startsWith(AuthConstants.AUTH_TYPE)) {
+            // 인증 유형(bearer)을 제외한 토큰 값을 반환
+            return bearerToken.substring(AuthConstants.AUTH_TYPE.length()).trim();
         }
 
         return null;
@@ -158,7 +156,7 @@ public class JwtTokenProvider {
     /**
      * JWT 토큰 만료 확인 (만료 여부 true/false 반환)
      *
-     * @param token
+     * @param tokenㅠ
      * @return
      */
     public boolean validateToken(String token) {

@@ -33,7 +33,6 @@ public class AuthController {
         HttpServletResponse httpServletResponse
     ) throws Exception {
         return authService.login(loginRequestDto, httpServletRequest, httpServletResponse);
-//        return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 
 }

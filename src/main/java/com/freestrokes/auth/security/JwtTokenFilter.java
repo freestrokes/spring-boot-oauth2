@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 // TODO: JwtTokenFilter
-// 로그인시 request에 담긴 토큰의 유효성을 확인하는 역할.
+// 로그인시 request에 담긴 토큰의 유효성을 확인하는 필터
 
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -31,6 +31,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         //  토큰 유효성 검사
         if (token != null && jwtTokenProvider.validateToken(token)) {
+
             // 토큰을 인증하고 결과를 인증객체(Authentication)에 저장
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
 
