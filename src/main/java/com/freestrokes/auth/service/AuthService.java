@@ -12,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,22 +43,25 @@ public class AuthService {
 
         // 사용자 조회
         User findUser = userRepository.findByEmail(loginRequestDto.getEmail())
-            .orElseThrow(() -> new UsernameNotFoundException("User '" + loginRequestDto.getEmail() + "' Not Found."));
+            .orElseThrow(() -> new UsernameNotFoundException("User [" + loginRequestDto.getEmail() + "] not found."));
+
+        JSONObject bodyObj = new JSONObject();
 
         // 비밀번호 확인
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), findUser.getPassword())) {
-
-            // TODO
-//            JSONObject Body = new JSONObject();
-//            Body.put("auth", Auth);
-
-            return new ResponseEntity<>("{}", HttpStatus.EXPECTATION_FAILED);
+            bodyObj.put("message", "Password do not match.");
+            return new ResponseEntity<>(bodyObj, HttpStatus.EXPECTATION_FAILED);
         }
 
         // JWT 토큰 생성
         AuthDto.AuthTokenDto authToken = jwtTokenProvider.createJwtToken(findUser, httpServletRequest, httpServletResponse);
 
-        return new ResponseEntity<>(authToken, HttpStatus.OK);
+        bodyObj.put("accessToken", authToken.getAccessToken());
+        bodyObj.put("refreshToken", authToken.getRefreshToken());
+        bodyObj.put("accessTokenExpiration", authToken.getAccessTokenExpiration());
+        bodyObj.put("refreshTokenExpiration", authToken.getRefreshTokenExpiration());
+
+        return new ResponseEntity<>(bodyObj, HttpStatus.OK);
     }
 
 }

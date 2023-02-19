@@ -35,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // 사용자 조회
         User findUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User [" + email + "] Not Found."));
+                .orElseThrow(() -> new UsernameNotFoundException("User [" + email + "] not found."));
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(findUser.getRole().toString()));
