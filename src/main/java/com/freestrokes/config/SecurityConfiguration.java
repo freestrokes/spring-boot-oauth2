@@ -21,9 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 // TODO: @EnableWebSecurity
 // Spring Security 설정 활성화 어노테이션
 
-// TODO: WebSecurityConfigurerAdapter Deprecated
-// SecurityFilterChain을 Bean으로 등록하여 사용 필요.
-
 @RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
@@ -34,18 +31,25 @@ public class SecurityConfiguration {
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
-    // TODO
-//    @Bean
-//    public WebSecurityCustomizer configure() {
-//        return (web) -> web.ignoring().mvcMatchers(
-//            "/v3/api-docs/**",
-//            "/swagger-ui/**",
-//            "/api/v1/login" // 임시
-//        );
-//    }
+    // TODO: WebSecurityCustomizer
+    // WebSecurity 설정
+
+    // TODO: SecurityFilterChain
+    // HttpSecurity 설정
+    // 기존의 WebSecurityConfigurerAdapter 클래스가 Deprecated 되었기 때문에
+    // SecurityFilterChain을 Bean으로 등록하여 사용.
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public WebSecurityCustomizer configure() {
+        return (web) -> web.ignoring().antMatchers(
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/api/v1/login"
+        );
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
             .httpBasic().disable()  // spring security 로그인 페이지 사용 여부 (사용 안함)
             .csrf().disable()   // csrf 사용 여부 (사용안함)
@@ -85,7 +89,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 

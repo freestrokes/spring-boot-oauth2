@@ -51,7 +51,7 @@ public class JwtTokenProvider {
         // Refresh Token 만료 시간
         Date refreshTokenExpiration = new Date(now.getTime() + securityProperties.getToken().getRefreshTokenExpiration());
 
-        // claims
+        // claims (토큰 정보를 담는 단위, payload 설정)
         Claims claims = Jwts.claims().setSubject(user.getEmail());
         claims.put("name", user.getName());
         claims.put("email", user.getEmail());
@@ -78,13 +78,14 @@ public class JwtTokenProvider {
             .signWith(secretKey, SignatureAlgorithm.HS256)
             .compact();
 
-        // Refresh Token 쿠키에 추가
+        // Refresh Token 쿠키 생성
         Cookie cookie = new Cookie(AuthConstants.REFRESH_TOKEN, refreshToken);
             cookie.setPath("/");
             cookie.setSecure(true);
             cookie.setHttpOnly(true);
             cookie.setMaxAge(securityProperties.getToken().getRefreshTokenExpiration());
 
+        // 쿠키 등록
         httpServletResponse.addCookie(cookie);
 
         return AuthDto.AuthTokenDto.builder()
