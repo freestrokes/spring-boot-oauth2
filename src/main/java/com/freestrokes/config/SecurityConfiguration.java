@@ -43,7 +43,7 @@ public class SecurityConfiguration {
         return (web) -> web.ignoring().antMatchers(
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/api/v1/login"
+            "/api/v1/auth/login"
         );
     }
 

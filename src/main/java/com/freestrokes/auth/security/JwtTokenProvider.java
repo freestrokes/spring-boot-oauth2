@@ -11,6 +11,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,11 +38,7 @@ public class JwtTokenProvider {
      * @param user
      * @return
      */
-    public AuthDto.AuthTokenDto createJwtToken(
-        User user,
-        HttpServletRequest httpServletRequest,
-        HttpServletResponse httpServletResponse
-    ) {
+    public AuthDto.AuthTokenDto createJwtToken(User user) {
 
         Date now = new Date();
 
@@ -78,16 +75,6 @@ public class JwtTokenProvider {
             .signWith(secretKey, SignatureAlgorithm.HS256)
             .compact();
 
-        // Refresh Token 쿠키 생성
-        Cookie cookie = new Cookie(AuthConstants.REFRESH_TOKEN, refreshToken);
-            cookie.setPath("/");
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            cookie.setMaxAge(securityProperties.getToken().getRefreshTokenExpiration());
-
-        // 쿠키 등록
-        httpServletResponse.addCookie(cookie);
-
         return AuthDto.AuthTokenDto.builder()
             .accessToken(accessToken)
             .accessTokenExpiration(accessTokenExpiration)
@@ -96,6 +83,55 @@ public class JwtTokenProvider {
             .build();
 
     }
+
+    // TODO: refresh jwt token
+//    /**
+//     * JWT 토큰 리프레시
+//     *
+//     * @param accessToken
+//     * @param request
+//     * @param response
+//     * @return
+//     */
+//    public AuthDto.AuthTokenDto refreshJwtToken(
+//        String accessToken,
+//        HttpServletRequest request,
+//        HttpServletResponse response
+//    ) {
+//
+//        Cookie refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN).orElse(null);
+//        org.springframework.security.core.Authentication authentication = jwtTokenProvider.getAuthentication(
+//            accessToken);
+//
+//        String username = authentication.getName();
+//        if (!jwtTokenProvider.validateToken(refreshToken.getValue())) {
+//            throw new AuthException("token isn't valid", HttpStatus.NOT_FOUND);
+//        }
+//
+//        authRepository.findByUsername(username)
+//            .orElseThrow(() -> new AuthException("The user role doesn't exist", HttpStatus.NOT_FOUND));
+//
+//        AuthToken authToken = jwtTokenProvider.createToken(username);
+//
+//        AccessTokenInfo accessTokenInfo = accessTokenRepository.findByUsernameAndAccessTokenAndEnabled(
+//                username, accessToken, true)
+//            .orElseThrow(() -> new AuthException("the token doesn't exist", HttpStatus.UNAUTHORIZED));
+//
+//        // 토큰 리프레시
+//        accessTokenInfo.refreshToken(authToken.getAccessToken(), authToken.getRefreshToken(),
+//            authToken.getRefreshTokenExpiration());
+//
+//        CookieUtil.addCookie(response, REFRESH_TOKEN, authToken.getRefreshToken(),
+//            jwtProperties.getToken().getRefreshTokenExpireLength());
+//
+//        return AuthDto.AuthTokenDto.builder()
+//            .accessToken(accessToken)
+//            .accessTokenExpiration(accessTokenExpiration)
+//            .refreshToken(refreshToken)
+//            .refreshTokenExpiration(refreshTokenExpiration)
+//            .build();
+//
+//    }
 
     /**
      * JWT 토큰 인증 조회
