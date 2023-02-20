@@ -2,7 +2,7 @@ package com.freestrokes.config;
 
 import com.freestrokes.auth.handler.CustomAccessDeniedHandler;
 import com.freestrokes.auth.handler.CustomAuthenticationEntryPoint;
-import com.freestrokes.auth.handler.OAuth2SuccessHandler;
+import com.freestrokes.auth.handler.CustomAuthenticationSuccessHandler;
 import com.freestrokes.auth.security.JwtTokenFilter;
 import com.freestrokes.auth.security.JwtTokenProvider;
 import com.freestrokes.auth.service.CustomOAuth2UserService;
@@ -26,7 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -81,7 +81,7 @@ public class SecurityConfiguration {
                 .userInfoEndpoint() // oauth2 로그인 성공 후 가져올 설정
                 .userService(customOAuth2UserService)   // oauth2 로그인 성공시 수행될 로직이 담긴 OAuth2UserService 구현체 등록
             .and()
-//                .successHandler(oAuth2SuccessHandler)
+//                .successHandler(customAuthenticationSuccessHandler)
             .and()
                 .build();
 

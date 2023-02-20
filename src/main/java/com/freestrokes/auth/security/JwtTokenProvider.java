@@ -11,6 +11,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -84,22 +88,36 @@ public class JwtTokenProvider {
 
     }
 
-    // TODO: refresh jwt token
-//    /**
-//     * JWT 토큰 리프레시
-//     *
-//     * @param accessToken
-//     * @param request
-//     * @param response
-//     * @return
-//     */
-//    public AuthDto.AuthTokenDto refreshJwtToken(
-//        String accessToken,
-//        HttpServletRequest request,
-//        HttpServletResponse response
-//    ) {
-//
+    /**
+     * JWT 토큰 리프레시
+     *
+     * @param accessToken
+     * @param request
+     * @param response
+     * @return
+     */
+    public AuthDto.AuthTokenDto refreshJwtToken(
+        String accessToken,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) {
+
+        // 쿠키 조회 (refresh token)
+        Cookie findCookie = Arrays.stream(request.getCookies())
+            .filter(cookie -> cookie.getName().equals(AuthConstants.REFRESH_TOKEN))
+            .findAny()
+            .orElse(null);
+
+        if (accessToken == null || findCookie == null) {
+            // TODO: exception 추가
+        }
+
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies == null || cookies.length == 0) {
+////            return Optional.empty();
+//        }
 //        Cookie refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN).orElse(null);
+//
 //        org.springframework.security.core.Authentication authentication = jwtTokenProvider.getAuthentication(
 //            accessToken);
 //
@@ -123,15 +141,15 @@ public class JwtTokenProvider {
 //
 //        CookieUtil.addCookie(response, REFRESH_TOKEN, authToken.getRefreshToken(),
 //            jwtProperties.getToken().getRefreshTokenExpireLength());
-//
-//        return AuthDto.AuthTokenDto.builder()
+
+        return AuthDto.AuthTokenDto.builder()
 //            .accessToken(accessToken)
 //            .accessTokenExpiration(accessTokenExpiration)
 //            .refreshToken(refreshToken)
 //            .refreshTokenExpiration(refreshTokenExpiration)
-//            .build();
-//
-//    }
+            .build();
+
+    }
 
     /**
      * JWT 토큰 인증 조회

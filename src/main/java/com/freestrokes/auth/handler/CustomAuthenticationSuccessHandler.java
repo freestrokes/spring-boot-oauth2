@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 
 @Component
-public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
